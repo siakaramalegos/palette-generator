@@ -30,4 +30,5 @@ body {
   display: grid;
   gap: 12px;
   grid-template-columns: 3fr 1fr 11fr;
+  margin: 6px 0;
 }
