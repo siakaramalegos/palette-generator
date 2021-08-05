@@ -118,3 +118,8 @@ input {
 button {
   cursor: pointer;
 }
+
+pre {
+  max-width: 100%;
+  overflow: auto;
+}
