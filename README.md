@@ -1,8 +1,10 @@
 # palette-generator
 
+Built with Preact
+
 ## CLI Commands
 
-``` bash
+```bash
 # install dependencies
 npm install
 
