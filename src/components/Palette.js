@@ -21,7 +21,7 @@ function getColorObject(color) {
   };
 }
 
-const ColorForm = ({ colors, onSubmit }) => {
+const ColorForm = ({ colors, onSubmit, addColor }) => {
   const inputGroups = colors.map((color, index) => {
     return (
       <label>
@@ -31,13 +31,18 @@ const ColorForm = ({ colors, onSubmit }) => {
       </label>
     );
   });
+
   return (
     <form onSubmit={onSubmit}>
       <p>
         Enter any valid CSS color (hex, rgb, hsl, name) to generate color
-        scales:
+        scales. Leave input blank to remove that color.
       </p>
       {inputGroups}
+      <button type="button" onClick={addColor}>
+        Add color
+      </button>
+      <br />
       <button>Generate Palette</button>
     </form>
   );
@@ -55,7 +60,6 @@ const CssCopy = ({ colors }) => {
         .join("\n");
     })
     .join("\n\n");
-  console.log({ css });
 
   return (
     <pre>
@@ -70,16 +74,19 @@ const CssCopy = ({ colors }) => {
 
 const Palette = () => {
   const [colors, setColors] = useState(INITIAL_STATE);
-
+  const addColor = () => {
+    setColors([...colors, getColorObject("#ffffff")]);
+  };
   const changeColors = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const newColors = Array.from(formData.values());
+    // TODO: check validity
+    const newColors = Array.from(formData.values()).filter(
+      (color) => color !== ""
+    );
 
     setColors(newColors.map((color) => getColorObject(color)));
   };
-
-  console.log({ INITIAL_STATE });
 
   const colorRows = colors.map((color) => (
     <SingleColor color={color.color} scales={color.scales} />
@@ -87,7 +94,7 @@ const Palette = () => {
 
   return (
     <div>
-      <ColorForm colors={colors} onSubmit={changeColors} />
+      <ColorForm colors={colors} onSubmit={changeColors} addColor={addColor} />
       {colorRows}
       <h2>Copy CSS</h2>
       <CssCopy colors={colors} />
