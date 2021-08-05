@@ -1,48 +1,93 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import { hexToHsluv, hsluvToHex } from "hsluv";
+import { hexToHsluv } from "hsluv";
 import SingleColor from "./SingleColor";
 import chroma from "chroma-js";
 
-const LIGHTNESSES = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-const INITIAL_COLORS = ["#ff0000", "blue"];
+const INITIAL_COLORS = ["#ff0000", "#0000ff"];
 const INITIAL_STATE = INITIAL_COLORS.map((color) => getColorObject(color));
 
-function getColorObject(color) {
-  const hex = chroma(color).hex();
+function boxedValue(value, min = 0, max = 100) {
+  return Math.max(0, Math.min(value, 100));
+}
+
+function getDark(colorChroma) {
+  return colorChroma.desaturate().set("hsl.l", 0.05).hex();
+}
+function getLight(colorChroma) {
+  return colorChroma.desaturate().set("hsl.l", 0.95).hex();
+}
+
+function getColorObject(color, mode = "lrgb", dark, light) {
+  const STEPS = 10;
+  const colorChroma = chroma(color);
+  const hex = colorChroma.hex();
   const hsluvColor = hexToHsluv(hex);
+  // TODO: maybe switch to chroma
+  const luminance = hsluvColor[2] / 100;
+  const darkStart = dark ? dark : getDark(colorChroma);
+  const lightEnd = light ? light : getLight(colorChroma);
+
+  const scale = chroma
+    .scale([darkStart, hex, lightEnd])
+    .mode(mode)
+    .domain([0, luminance, 1]);
+  let scales = [];
+
+  for (let index = 0; index <= STEPS; index++) {
+    scales.push(scale(index / STEPS));
+  }
 
   return {
     color,
     hsluvColor,
-    scales: LIGHTNESSES.map((lightness) =>
-      hsluvToHex([hsluvColor[0], hsluvColor[1], lightness])
-    ),
+    scales,
+    darkStart,
+    lightEnd,
   };
 }
 
-const ColorForm = ({ colors, onSubmit, addColor }) => {
+// TODO: add delete color feature
+const ColorForm = ({ colors, onSubmit, addColor, mode }) => {
+  const modes = ["lrgb", "rgb", "lab"];
+  const modeOptions = modes.map((modeOption) => {
+    return (
+      <option value={modeOption} selected={modeOption === mode}>
+        {modeOption}
+      </option>
+    );
+  });
   const inputGroups = colors.map((color, index) => {
     return (
-      <label>
-        CSS Color Value {index + 1}
-        <br />
-        <input name={`color-${index}`} value={color.color} />
-      </label>
+      <fieldset>
+        <legend>Color {index + 1}</legend>
+        <label for={`color-${index}`}>CSS Color Value</label>
+        <input
+          type="color"
+          id={`color-${index}`}
+          name={`color-${index}`}
+          value={color.color}
+        />
+      </fieldset>
     );
   });
 
   return (
     <form onSubmit={onSubmit}>
-      <p>
-        Enter any valid CSS color (hex, rgb, hsl, name) to generate color
-        scales. Leave input blank to remove that color.
-      </p>
+      <p>Enter a CSS color (hex, rgb, hsl) to generate color scales.</p>
       {inputGroups}
-      <button type="button" onClick={addColor}>
-        Add color
-      </button>
-      <br />
+      <p>
+        <button type="button" onClick={addColor}>
+          Add color
+        </button>
+      </p>
+      <fieldset>
+        <legend>Options</legend>
+        <label for="mode">Mode</label>
+        <select name="mode" id="mode">
+          {modeOptions}
+        </select>
+      </fieldset>
       <button>Generate Palette</button>
     </form>
   );
@@ -74,18 +119,20 @@ const CssCopy = ({ colors }) => {
 
 const Palette = () => {
   const [colors, setColors] = useState(INITIAL_STATE);
+  const [mode, setMode] = useState("lrgb");
   const addColor = () => {
     setColors([...colors, getColorObject("#ffffff")]);
   };
   const changeColors = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    // TODO: check validity
-    const newColors = Array.from(formData.values()).filter(
-      (color) => color !== ""
+    const newColors = Array.from(formData.values()).filter((color) =>
+      chroma.valid(color)
     );
+    const mode = formData.get("mode");
 
-    setColors(newColors.map((color) => getColorObject(color)));
+    setColors(newColors.map((color) => getColorObject(color, mode)));
+    setMode(mode);
   };
 
   const colorRows = colors.map((color) => (
@@ -94,7 +141,12 @@ const Palette = () => {
 
   return (
     <div>
-      <ColorForm colors={colors} onSubmit={changeColors} addColor={addColor} />
+      <ColorForm
+        colors={colors}
+        onSubmit={changeColors}
+        addColor={addColor}
+        mode={mode}
+      />
       {colorRows}
       <h2>Copy CSS</h2>
       <CssCopy colors={colors} />
