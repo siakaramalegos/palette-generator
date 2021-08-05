@@ -50,7 +50,7 @@ const CssCopy = ({ colors }) => {
         .map((color, index) => {
           const cssColor = chroma(color).css("hsl");
 
-          return `  --color-${objectIndex + 1}-${index * 10}: ${cssColor}`;
+          return `  --color-${objectIndex + 1}-${index * 10}: ${cssColor};`;
         })
         .join("\n");
     })
