@@ -1,13 +1,49 @@
+:root {
+  /* --font-display: "Nunito", sans-serif; */
+  --font-display: "Open Sans", sans-serif;
+  --font-body: "Open Sans", sans-serif;
+  --size-200: 0.694rem;
+  --size-300: 0.833rem;
+  --size-400: 1rem;
+  --size-500: 1.2rem;
+  --size-600: 1.44rem;
+  --size-700: 1.728rem;
+  --size-800: 2.074rem;
+  --size-900: 2.488rem;
+  --size-1000: 2.986rem;
+  /* Shifted scales */
+  --col-1-shift-0: hsl(300, 100%, 88.04%);
+  --col-1-shift-10: hsl(345.76, 100%, 76.86%);
+  --col-1-shift-20: hsl(1.01, 100%, 64.9%);
+  --col-1-shift-30: hsl(0.24, 100%, 48.43%);
+  --col-1-shift-40: hsl(0, 100%, 38.63%);
+  --col-1-shift-50: hsl(0, 100%, 27.84%);
+  --col-1-shift-60: hsl(0, 100%, 18.63%);
+
+  --col-2-shift-0: hsl(0, 0%, 100%);
+  --col-2-shift-10: hsl(271.25, 96%, 90.2%);
+  --col-2-shift-20: hsl(260.87, 30.67%, 70.59%);
+  --col-2-shift-30: hsl(250.91, 19.13%, 54.9%);
+  --col-2-shift-40: hsl(240, 20.59%, 40%);
+  --col-2-shift-50: hsl(226.83, 35.04%, 22.94%);
+  --col-2-shift-60: hsl(214.74, 100%, 7.45%);
+
+  --col-white: #fafafa;
+  --col-black: var(--col-2-shift-60);
+}
+
 html,
 body {
   height: 100%;
   width: 100%;
   padding: 0;
   margin: 0;
-  background: #fafafa;
-  font-family: "Helvetica Neue", arial, sans-serif;
+  background: var(--col-white);
+  font-family: var(--font-body);
   font-weight: 400;
-  color: #444;
+  font-size: 100%; /* 16px */
+  line-height: 1.5;
+  color: var(--col-black);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -16,6 +52,38 @@ body {
   box-sizing: border-box;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: clamp(var(--size-900), 5vw, 4rem);
+  text-align: center;
+}
+h2,
+h2 code {
+  font-size: var(--size-800);
+}
+h3,
+h3 code {
+  font-size: var(--size-700);
+}
+h4 {
+  font-size: var(--size-600);
+}
+h5 {
+  font-size: var(--size-500);
+}
+small {
+  font-size: var(--size-300);
+}
 #app {
   height: 100%;
 }
@@ -42,7 +110,7 @@ body {
   width: 100%;
   height: 56px;
   padding: 0;
-  background: #673ab7;
+  background: var(--col-2-shift-40);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   z-index: 50;
 }
@@ -54,7 +122,7 @@ body {
   font-size: 24px;
   line-height: 56px;
   font-weight: 400;
-  color: #fff;
+  color: var(--col-white);
 }
 
 .header nav {
@@ -71,7 +139,7 @@ body {
   text-align: center;
   background: rgba(255, 255, 255, 0);
   text-decoration: none;
-  color: #fff;
+  color: var(--col-white);
   will-change: background-color;
 }
 
@@ -100,7 +168,7 @@ body {
 
 /* Form */
 form {
-  background-color: white;
+  /* background-color: var(--col-2-shift-0); */
   margin: 40px auto;
   max-width: 700px;
   padding: 32px;
@@ -117,9 +185,43 @@ input {
 /* Button */
 button {
   cursor: pointer;
+  background-color: var(--col-2-shift-40);
+  border: none;
+  color: var(--col-white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--size-400);
+  padding: 0.5rem 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+button.btn-primary {
+  background-color: var(--col-1-shift-40);
 }
 
 pre {
+  background-color: var(--col-2-shift-60);
+  color: var(--col-white);
+  padding: 1rem;
   max-width: 100%;
   overflow: auto;
+}
+
+@media screen and (min-width: 500px) {
+  :root {
+    --size-200: 0.64rem;
+    --size-300: 0.8rem;
+    --size-400: 1rem;
+    --size-500: 1.25rem;
+    --size-600: 1.563rem;
+    --size-700: 1.953rem;
+    --size-800: 2.441rem;
+    --size-900: 3.052rem;
+    --size-1000: 3.815rem;
+  }
+  html,
+  body {
+    font-size: 112.5%;
+  } /*18px*/
 }

@@ -7,6 +7,10 @@ const About = () => (
       <p>
         Built by <a href="https://sia.codes">Sia Karamalegos</a>.
       </p>
+      <p>
+        Like this tool?{" "}
+        <a href="https://www.buymeacoffee.com/sia.codes">Buy me a coffee</a>.
+      </p>
     </section>
     <section>
       <h2>Resources</h2>
@@ -29,6 +33,12 @@ const About = () => (
             Create new technique for new contrast formula (threshold value)
           </a>{" "}
           issue in the WCAG GitHub repo
+        </li>
+        <li>
+          <a href="https://medium.muz.li/natural-color-palettes-7769e5b38ecd">
+            Pick Better Colors with the Hue Shift Method
+          </a>{" "}
+          by Sam Gordon
         </li>
       </ul>
     </section>
