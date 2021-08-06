@@ -180,6 +180,12 @@ label {
 }
 input {
   font-weight: 400;
+  min-height: 48px;
+  min-width: 48px;
+}
+select {
+  font-size: var(--size-400);
+  padding: 0.5rem 1rem;
 }
 
 /* Button */

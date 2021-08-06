@@ -15,7 +15,7 @@ const ColorForm = ({ colors, onSubmit, addColor, mode }) => {
     return (
       <fieldset>
         <legend>Color {index + 1}</legend>
-        <label for={`color-${index}`}>CSS Color Value</label>
+        <label for={`color-${index}`}>Select Color</label>
         <input
           type="color"
           id={`color-${index}`}
@@ -28,7 +28,7 @@ const ColorForm = ({ colors, onSubmit, addColor, mode }) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <p>Enter a CSS color (hex, rgb, hsl) to generate color scales.</p>
+      <p>Select colors to generate color scales.</p>
       {inputGroups}
       <p>
         <button type="button" onClick={addColor}>
